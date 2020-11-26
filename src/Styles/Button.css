@@ -1,0 +1,24 @@
+* {
+  box-sizing: border-box;
+}
+
+.button {
+  width: 3rem;
+  height: 3rem;
+  border: none;
+  outline: none;
+  color: #2f1728;
+  background-color: #f5b539;
+  margin: 0.15rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  border-radius: .1rem;
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+
+.button.spans-two {
+  flex-grow: 2;
+}

@@ -1,0 +1,21 @@
+.calculator {
+  display: flex;
+  flex-direction: column;
+  margin: 0.5rem;
+  width: 15rem;
+  height: 25rem;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff5da;
+  border: .2rem solid #f5b539;
+  border-radius: .2rem;
+  padding: 1rem;
+}
+
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  width: 13.2rem;
+  margin-bottom: -0.2rem;
+  /* margin-top: 0.2rem; */
+}

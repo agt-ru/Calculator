@@ -1,13 +1,12 @@
-import React, { Component } from 'react'
-import '../Styles/Input.css';
+import React from "react";
+import "../Styles/Input.css";
 
-export default class Input extends Component {
-  render() {
-    return (
-      <div className="input">
-        <div className="whole">{this.props.mathExpr}</div>
-        <div className="current">{this.props.showResult ? this.props.result : this.props.operand}</div>        
-      </div>
-    )
-  }
+export default function Input(props) {
+  const { operand, result, mathExpr, showResult } = props;
+  return (
+    <div className="input">
+      <div className="whole">{mathExpr}</div>
+      <div className="current">{showResult ? result : operand}</div>
+    </div>
+  );
 }

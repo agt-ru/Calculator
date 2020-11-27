@@ -1,27 +1,43 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import Button from "./Button";
 import Input from "./Input";
 import "../Styles/Calculator.css";
 
-const MAX_DIGITS = 12;
+const MAX_DIGITS = 11;
 const MAX_DIGITS_WHOLE = 27;
+const buttons = [
+  "AC",
+  "+/-",
+  "%",
+  "/",
+  "7",
+  "8",
+  "9",
+  "\u204E",
+  "4",
+  "5",
+  "6",
+  "-",
+  "1",
+  "2",
+  "3",
+  "+",
+  "0",
+  ".",
+  "=",
+];
 
-export default class Calculator extends Component {
-  constructor(props) {
-    super(props);
-    this.handleButtonClick = this.handleButtonClick.bind(this);
-    this.state = {
-      operand: '0',
-      mathExpr: "",
-      showResult: true,
-    };
-    this.currOperator = "";
-    this.result = 0;
-    this.calculated = false;
-    this.fraction = false
-  }
+let currOperator = '';
+let result = 0;
+let calculated = false;
+let fraction = false;
 
-  shortenNum(num) {
+export default function Calculator(props) {
+  let [operand, setOperand] = useState('0');
+  let [mathExpr, setMathExpr] = useState('');
+  let [showResult, setShowResult] = useState(true);
+
+  function shortenNum(num) {
     let numStr = num.toString();
     let [int, fraction] = numStr.split(".");
     let resultStr = "",
@@ -37,58 +53,56 @@ export default class Calculator extends Component {
     return result;
   }
 
-  handleButtonClick(e, value) {
-    let { operand, mathExpr, showResult } = this.state;
-
+  function handleButtonClick(e, value) {
     if (value === "AC") {
       operand = '0';
-      this.result = 0;
+      result = 0;
       mathExpr = "";
-      this.currOperator = "";
+      currOperator = "";
       showResult = true;
-      this.fraction = false;
-      this.calculated = false;
+      fraction = false;
+      calculated = false;
     }
 
     if (value === "+/-") operand = `${-parseFloat(operand)}`;
     else if (/[-/+\u204E%]/.test(value)) {
       if (value === "\u204E") value = "*";
       if (value === '%') { 
-        operand = this.result * parseFloat(operand) / 100;
-        value = this.currOperator;
+        operand = result * parseFloat(operand) / 100;
+        value = currOperator;
       }
-      if (this.calculated) {
-        this.calculated = false;
-        mathExpr = `${this.result} ${value}`;
+      if (calculated) {
+        calculated = false;
+        mathExpr = `${result} ${value}`;
       } else if (!showResult || mathExpr === "") {
         if (mathExpr) mathExpr += " ";
         mathExpr += `${operand} ${value}`;
-        this.result = this.shortenNum(
-          this.currOperator
-            ? eval(this.result + this.currOperator + operand)
+        result = shortenNum(
+          currOperator
+            ? eval(result + currOperator + operand)
             : operand
         );
         showResult = true;
       }
       mathExpr = mathExpr.slice(0, mathExpr.length - 1) + value;
-      this.currOperator = value;
-      this.fraction = false;
+      currOperator = value;
+      fraction = false;
     }
 
     if (value === "=") {
-      this.fraction = false;
-      this.calculated = true;
+      fraction = false;
+      calculated = true;
       mathExpr = "";
-      this.result = this.shortenNum(
-        this.currOperator
-          ? eval(this.result + this.currOperator + operand)
+      result = shortenNum(
+        currOperator
+          ? eval(result + currOperator + operand)
           : operand
       );
       showResult = true;
     }
 
     if(value === '.' && !showResult) {
-      this.fraction = true;
+      fraction = true;
       operand += '.';
     }
 
@@ -97,7 +111,7 @@ export default class Calculator extends Component {
         operand = '0';
         showResult = false;
       }
-      if(this.fraction && operand.indexOf('.') === -1) {
+      if(fraction && operand.indexOf('.') === -1) {
         operand += '.';
       }
       operand = operand === '0' ? value : operand + value;
@@ -116,49 +130,24 @@ export default class Calculator extends Component {
       mathExpr = mathExpr.slice(finSliceId);
     }
 
-    this.setState({
-      operand: operand,
-      mathExpr: mathExpr,
-      showResult: showResult,
-    });
+    setOperand(operand);
+    setMathExpr(mathExpr);
+    setShowResult(showResult);
   }
 
-  render() {
-    const buttons = [
-      "AC",
-      "+/-",
-      "%",
-      "/",
-      "7",
-      "8",
-      "9",
-      "\u204E",
-      "4",
-      "5",
-      "6",
-      "-",
-      "1",
-      "2",
-      "3",
-      "+",
-      "0",
-      ".",
-      "=",
-    ];
     return (
       <div className="calculator">
         <Input
-          operand={this.state.operand}
-          result={this.result}
-          mathExpr={this.state.mathExpr}
-          showResult={this.state.showResult}
+          operand={operand}
+          result={result}
+          mathExpr={mathExpr}
+          showResult={showResult}
         />
         <div className="buttons">
           {buttons.map((value) => (
-            <Button value={value} handleClick={this.handleButtonClick} />
+            <Button value={value} handleClick={handleButtonClick} />
           ))}
         </div>
       </div>
     );
-  }
 }
